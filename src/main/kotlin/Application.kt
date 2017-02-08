@@ -1,4 +1,8 @@
+import com.danix.hello.controllers.HelloController
 import io.undertow.Undertow
+import org.springframework.beans.factory.getBeansOfType
+import org.springframework.context.support.GenericApplicationContext
+import org.springframework.context.support.registerBean
 import org.springframework.http.MediaType
 import org.springframework.http.server.reactive.UndertowHttpHandlerAdapter
 import org.springframework.web.reactive.function.BodyInserters.fromObject
@@ -16,11 +20,32 @@ fun helloWorld() = HandlerFunction<ServerResponse> {
 }
 
 fun routingFunction(): RouterFunction<*> {
-    return route(GET("/hello-world").and(accept(MediaType.TEXT_PLAIN)), helloWorld())
+    return route(GET("/hello-world").and(accept(MediaType.TEXT_PLAIN)),
+            helloWorld())
+}
+
+fun routingFunction1(): RouterFunction<*> {
+    return route(GET("/hello-world-1").and(accept(MediaType.TEXT_PLAIN)),
+            helloWorld())
+}
+
+val context = GenericApplicationContext {
+    registerBean<HelloController>()
 }
 
 fun main(args: Array<String>) {
-    val httpHandler = toHttpHandler(routingFunction())
+
+    val definedRoutes = routingFunction().and(routingFunction1())
+    context.refresh()
+
+    val allRoutes =
+            context.getBeansOfType(RouterFunction::class)
+                    .values
+                    .reduce(RouterFunction<*>::and)
+                    .and(definedRoutes)
+
+
+    val httpHandler = toHttpHandler(allRoutes)
     val adapter = UndertowHttpHandlerAdapter(httpHandler)
     val server = Undertow.builder()
             .addHttpListener(8080, "localhost")
