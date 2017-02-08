@@ -1,5 +1,8 @@
 import com.danix.hello.controllers.HelloController
+import com.danix.hello.controllers.PersonController
+import com.danix.hello.controllers.PersonHandler
 import io.undertow.Undertow
+import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.getBeansOfType
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
@@ -30,6 +33,8 @@ fun routingFunction1(): RouterFunction<*> {
 }
 
 val context = GenericApplicationContext {
+    registerBean<PersonHandler>()
+    registerBean { PersonController(it.getBean<PersonHandler>()) }
     registerBean<HelloController>()
 }
 
