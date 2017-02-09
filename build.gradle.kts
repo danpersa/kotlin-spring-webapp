@@ -68,6 +68,9 @@ dependencies {
     compile("io.projectreactor.ipc:reactor-netty")
     compile("io.projectreactor:reactor-kotlin:1.0.0.BUILD-SNAPSHOT")
     testCompile("io.projectreactor.addons:reactor-test")
+    testCompile("com.nhaarman:mockito-kotlin:1.2.0")
+    testCompile("com.natpryce:hamkrest:1.2.3.0")
+
 
     compile("io.undertow:undertow-core:1.3.17.Final")
 

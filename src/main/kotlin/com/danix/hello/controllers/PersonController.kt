@@ -1,5 +1,6 @@
 package com.danix.hello.controllers
 
+import com.danix.hello.domain.Person
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.BodyInserters
@@ -11,7 +12,6 @@ import org.springframework.web.reactive.function.server.route
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
-data class Person(val name: String, val email: String)
 
 class PersonController(@Autowired val personHandler: PersonHandler) : RouterFunction<ServerResponse> {
 
